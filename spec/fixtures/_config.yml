@@ -1,0 +1,26 @@
+timezone: UTC
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: page
+    values:
+      layout: some_default
+
+app_engine:
+  base:
+    runtime: go
+    api_version: go1
+    default_expiration: 300s
+  handlers:
+    posts:
+      http_headers:
+        Link: "</static/css/style.css>; rel=preload; as=style"
+    statics:
+    - url: /images/
+      static_dir: _site/images
+      expiration: 4m
+    - url: /styles/
+      static_dir: _site/styles
+      expiration: 8m
