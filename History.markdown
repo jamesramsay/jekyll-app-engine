@@ -1,7 +1,7 @@
-## 0.1.0 / 2016-01-01
+## 0.1.0 / 2016-03-06
 
   * Birthday!
 
 ## 0.0.0 / 2016-02-24
 
-  * Alpha
+  * Initial alpha and experimentation
