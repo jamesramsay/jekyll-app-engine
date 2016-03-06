@@ -2,6 +2,7 @@
 
 [![Build Status](https://img.shields.io/travis/jamesramsay/jekyll-app-engine/master.svg)](https://travis-ci.org/jamesramsay/jekyll-app-engine)
 [![Version](https://img.shields.io/gem/v/jekyll-app-engine.svg)](https://rubygems.org/gems/jekyll-app-engine)
+[![Coverage Status](https://img.shields.io/codecov/c/github/jamesramsay/jekyll-app-engine/master.svg)](https://codecov.io/github/jamesramsay/jekyll-app-engine)
 
 `jekyll-app-engine` makes it easy to deploy your jekyll site to Google App Engine by generating handlers for your `app.yaml`.
 

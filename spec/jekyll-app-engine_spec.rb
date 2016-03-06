@@ -126,7 +126,7 @@ describe(Jekyll::JekyllAppEngine) do
   # end
 
   it "includes the correct number of items" do
-    expect(handlers.length).to eql 18
+    expect(handlers.length).to eql 15
   end
 
   # context "with a baseurl" do
