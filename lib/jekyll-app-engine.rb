@@ -1,34 +1,7 @@
 require 'fileutils'
+require 'google-yaml'
 
 module Jekyll
-
-  class GoogleYAMLTree < Psych::Visitors::YAMLTree
-    def accept target
-      if target.respond_to?(:to_yaml)
-        begin
-          loc = target.method(:to_yaml).source_location.first
-          if loc !~ /(syck\/rubytypes.rb|psych\/core_ext.rb)/
-            unless target.respond_to?(:encode_with)
-              if $VERBOSE
-                warn "implementing to_yaml is deprecated, please implement \"encode_with\""
-              end
-
-              target.to_yaml(:nodump => true)
-            end
-          end
-        rescue
-          # public_method or source_location might be overridden,
-          # and it's OK to skip it since it's only to emit a warning
-        end
-      end
-
-      if target.respond_to?(:encode_with)
-        dump_coder target
-      else
-        send(@dispatch_cache[target.class], target)
-      end
-    end
-  end
 
   class PageWithoutAFile < Page
     def read_yaml(*)
@@ -89,6 +62,7 @@ module Jekyll
     end
 
     def app_yaml_content
+      # HACK: use sub-classed YAML implementation which disables anchors and aliases
       builder = GoogleYAMLTree.create
       builder << generate_app_engine_yaml
 
@@ -97,6 +71,34 @@ module Jekyll
       app_yaml.data["layout"] = nil
       app_yaml.render({}, @site.site_payload)
       return app_yaml.output
+    end
+
+    def page_types
+      page_types_array = [
+        {
+          "content_type" => "posts",
+          "content_collection" => @site.posts.docs
+        },
+        {
+          "content_type" => "pages",
+          "content_collection" => @site.pages
+        },
+        {
+          "content_type" => "static",
+          "content_collection" => @site.static_files
+        },
+      ]
+
+      @site.collections.each_pair do |label, collection|
+        unless label == "posts"
+          page_types_array << {
+            "content_type" => "collections",
+            "content_collection" => collection.docs
+          }
+        end
+      end
+
+      return page_types_array
     end
 
     def generate_app_engine_yaml
@@ -108,28 +110,23 @@ module Jekyll
 
       app_yaml["handlers"] ||= []
 
-      generate_handlers("posts", @site.posts.docs).each { |handler| app_yaml["handlers"] << handler }
-      generate_handlers("pages", @site.pages).each { |handler| app_yaml["handlers"] << handler }
-
-      @site.collections.each_pair do |label, collection|
-        unless label == "posts"
-          generate_handlers("collections", collection.docs).each { |handler| app_yaml["handlers"] << handler }
-        end
+      page_types.each do |content|
+        generate_handlers(content).each { |handler| app_yaml["handlers"] << handler }
       end
-
-      generate_handlers("static", @site.static_files).each { |handler| app_yaml["handlers"] << handler }
 
       return app_yaml
     end
 
-    def generate_handlers(content_type, collection)
+    def generate_handlers(content)
+      content_type = content["content_type"]
+      content_collection = content["content_collection"]
       handlers = []
 
       handler_template = @app_engine["handlers"][content_type] || {}
       if handler_template.kind_of?(Array) or handler_template.has_key?("url")
         handlers << handler_template
       else
-        collection.each do |doc|
+        content_collection.each do |doc|
           handler = {
             "url" => doc.url,
             "static_files" => doc.destination("").sub("#{Dir.pwd}/", ""),

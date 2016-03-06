@@ -1,3 +1,10 @@
+require 'simplecov'
+
+if ENV['CI'] == 'true'
+  require 'codecov'
+  SimpleCov.formatter = SimpleCov::Formatter::Codecov
+end
+
 require 'jekyll'
 require File.expand_path('../lib/jekyll-app-engine', File.dirname(__FILE__))
 
