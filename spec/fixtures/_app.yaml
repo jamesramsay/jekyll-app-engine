@@ -1,0 +1,12 @@
+runtime: go
+api_version: go1
+default_expiration: 300s
+
+handlers:
+  posts:
+    http_headers:
+      Link: "</static/css/style.css>; rel=preload; as=style"
+  collections:
+  - url: /my_collection/*
+    static_files: _site/my_collection/*
+    upload: _site/my_collection/*

@@ -19,7 +19,8 @@ describe(Jekyll::JekyllAppEngine) do
   end
   let(:site)     { Jekyll::Site.new(config) }
   let(:contents) { File.read(dest_dir("app.yaml")) }
-  let(:handlers) { YAML.load_file(dest_dir("app.yaml"))["handlers"] }
+  let(:app_yaml) { YAML.load_file(dest_dir("app.yaml")) }
+  let(:handlers) { app_yaml["handlers"] }
   before(:each) do
     site.process
   end
@@ -129,15 +130,19 @@ describe(Jekyll::JekyllAppEngine) do
     expect(handlers.length).to eql 15
   end
 
-  # context "with a baseurl" do
-  #   let(:config) do
-  #     Jekyll.configuration(Jekyll::Utils.deep_merge_hashes(overrides, {"baseurl" => "/bass"}))
-  #   end
-  #
-  #   it "correctly adds the baseurl to the static files" do
-  #     expect(contents).to match /<loc>http:\/\/example\.org\/bass\/some-subfolder\/this-is-a-subfile\.html<\/loc>/
-  #   end
-  #
+  context "with a base in _config.yml" do
+    let(:config) do
+      config_override = { "app_engine" => {
+        "runtime" => "python27",
+        "api_version" => 1
+      } }
+      Jekyll.configuration(Jekyll::Utils.deep_merge_hashes(overrides, config_override))
+    end
+
+    it "correctly uses _config.yml runtime" do
+      expect(app_yaml["runtime"]).to eql "python27"
+    end
+
   #   it "correctly adds the baseurl to the collections" do
   #     expect(contents).to match /<loc>http:\/\/example\.org\/bass\/my_collection\/test\.html<\/loc>/
   #   end
@@ -152,5 +157,5 @@ describe(Jekyll::JekyllAppEngine) do
   #     expect(contents).to match /<loc>http:\/\/example\.org\/bass\/2014\/03\/02\/march-the-second\.html<\/loc>/
   #     expect(contents).to match /<loc>http:\/\/example\.org\/bass\/2013\/12\/12\/dec-the-second\.html<\/loc>/
   #   end
-  # end
+  end
 end
