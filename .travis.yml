@@ -3,3 +3,10 @@ rvm:
 - 2.2.3
 script:
 - rake
+deploy:
+  provider: rubygems
+  gemspec: jekyll-app-engine.gemspec
+  api_key:
+    secure: gEbhxtKjKEz7JIez+hljl1IJMq8fyUOGKIXJWTWJnF4U3NZPHTq+Wv1AQKsgI80NpqTpCDTOfbiCPJ0Iti8XObkNjtfa7k9CNs/2MvQYcIWaDWP6ibgHTKZptiLh3IP+lkK3z2ZRvl4vaP/v2qKC16oaazqoli7Um0gj9dbX2A2PjxN9BZGMfgV1C3U1Igri7OWu37vVapuPvQ8NgeXOO8wWjP5tlJ2oOl0yHVXOVkw5Dwv8jpiFF0srz+lH+2FRG7yAZ95850okpNsyka+AOA1dJzBGZpyAwN3WCPQU0bsirijjDBdWpI0sxtSQFPA7z4up0PUv4/x34k9EtYjs31Xm4rtpItUiE7bgC8MVc4Li0gxhKuSQmAXozJHErM5GQZzeUUaaZffVbtKZsZUS2BX0zuRUO+22Jjfeh/nUkNiDPKVIIp5n7e2UPuGSruBy9t6GlR17KmLJ1uFV+a6WxTPlAUwS82WIuVdTzn2XrWc0WNLAHHfO3wJqFhwtGlowgmS7c7RTvc7MNkNk25e6P/p8TrEhameOxEjl6x7+lHXNZY6ssPwazGPagy2T39kSS/alCNYLuAIEkcFArM/c7tXPoajbYxpDdRJzmQm0ipKZ/xUp/Ij2GG3hF+Oq/9vBBF6/7oCLrC6Gynq7rXUlTaZURTkY3AzZQXlvmmYK4Ww=
+  on:
+    tags: true

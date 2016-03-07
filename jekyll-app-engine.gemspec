@@ -3,9 +3,9 @@
 Gem::Specification.new do |spec|
   spec.name        = "jekyll-app-engine"
   spec.summary     = "Generator for Google App Engine Handlers."
-  spec.version     = "0.0.1"
+  spec.version     = "0.1.0"
   spec.authors     = ["James Ramsay"]
-  spec.email       = "git@jwr.vc  "
+  spec.email       = "git@jwr.vc"
   spec.homepage    = "http://github.com/jamesramsay/jekyll-app-engine"
   spec.licenses    = ["MIT"]
 

@@ -16,16 +16,26 @@ module Jekyll
     # Main plugin action, called by Jekyll-core
     def generate(site)
       @site = site
-      @app_engine = site.config["app_engine"]
+      @app_engine = source_config
 
       unless app_yaml_exists?
-        unless @app_engine["base"] or source_partial_exists?
+        unless @app_engine
           raise "App engine base configration not found"
         end
+
+        @app_engine["handlers"] ||= {}
 
         write
         @site.keep_files ||= []
         @site.keep_files << "app.yaml"
+      end
+    end
+
+    def source_config
+      if @site.config.has_key?("app_engine")
+        @site.config["app_engine"]
+      elsif source_partial_exists?
+        YAML.load_file(source_path)
       end
     end
 
@@ -73,6 +83,10 @@ module Jekyll
       return app_yaml.output
     end
 
+    def output_collection?(label)
+      @site.config["collections"]["#{label}"]["output"]
+    end
+
     def page_types
       page_types_array = [
         {
@@ -90,7 +104,7 @@ module Jekyll
       ]
 
       @site.collections.each_pair do |label, collection|
-        unless label == "posts"
+        if label != "posts" and output_collection?(label)
           page_types_array << {
             "content_type" => "collections",
             "content_collection" => collection.docs
@@ -102,17 +116,14 @@ module Jekyll
     end
 
     def generate_app_engine_yaml
-      if source_partial_exists?
-        app_yaml = YAML.load_file(source_path)
-      else
-        app_yaml = @app_engine["base"].dup
-      end
-
-      app_yaml["handlers"] ||= []
+      app_yaml = @app_engine.dup
+      generated_handlers = []
 
       page_types.each do |content|
-        generate_handlers(content).each { |handler| app_yaml["handlers"] << handler }
+        generate_handlers(content).each { |handler| generated_handlers << handler }
       end
+
+      app_yaml["handlers"] = generated_handlers
 
       return app_yaml
     end
