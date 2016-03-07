@@ -83,6 +83,10 @@ module Jekyll
       return app_yaml.output
     end
 
+    def output_collection?(label)
+      @site.config["collections"]["#{label}"]["output"]
+    end
+
     def page_types
       page_types_array = [
         {
@@ -100,7 +104,7 @@ module Jekyll
       ]
 
       @site.collections.each_pair do |label, collection|
-        unless label == "posts"
+        if label != "posts" and output_collection?(label)
           page_types_array << {
             "content_type" => "collections",
             "content_collection" => collection.docs
@@ -120,6 +124,7 @@ module Jekyll
       end
 
       app_yaml["handlers"] = generated_handlers
+
       return app_yaml
     end
 

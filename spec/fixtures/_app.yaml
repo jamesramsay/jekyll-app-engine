@@ -6,7 +6,6 @@ handlers:
   posts:
     http_headers:
       Link: "</static/css/style.css>; rel=preload; as=style"
-  collections:
-  - url: /my_collection/*
-    static_files: _site/my_collection/*
-    upload: _site/my_collection/*
+  post-static:
+    url: /images/
+    static_dir: spec/dest/images
