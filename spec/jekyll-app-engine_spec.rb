@@ -72,20 +72,20 @@ describe(Jekyll::JekyllAppEngine) do
       }
     })
     expect(handlers).to include({
-      "url"          => "/2014/03/02/march-the-second.html",
-      "static_files" => "spec/dest/2014/03/02/march-the-second.html",
-      "upload"       => "spec/dest/2014/03/02/march-the-second.html",
-      "http_headers" => {
-              "Link" => "</static/css/style.css>; rel=preload; as=style"
-      }
-    })
-    expect(handlers).to include({
       "url"          => "/2014/03/04/march-the-fourth.html",
       "static_files" => "spec/dest/2014/03/04/march-the-fourth.html",
       "upload"       => "spec/dest/2014/03/04/march-the-fourth.html",
       "http_headers" => {
               "Link" => "</static/css/style.css>; rel=preload; as=style"
       }
+    })
+  end
+
+  it "doesn't put nil values into app.yaml" do
+    expect(handlers).to include({
+      "url"          => "/2014/03/02/march-the-second.html",
+      "static_files" => "spec/dest/2014/03/02/march-the-second.html",
+      "upload"       => "spec/dest/2014/03/02/march-the-second.html"
     })
   end
 

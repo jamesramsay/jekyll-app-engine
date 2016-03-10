@@ -1,6 +1,13 @@
 require 'fileutils'
 require 'google-yaml'
 
+
+class Hash
+  def compact
+    delete_if {|k,v| v.compact if v.kind_of?(Hash); v.nil? }
+  end
+end
+
 module Jekyll
 
   class PageWithoutAFile < Page
@@ -143,7 +150,7 @@ module Jekyll
             "static_files" => doc.destination("").sub("#{Dir.pwd}/", ""),
             "upload" => doc.destination("").sub("#{Dir.pwd}/", "")
           }
-          handlers << handler.merge!(handler_template.dup).merge!(document_overrides(doc))
+          handlers << handler.merge!(handler_template.dup).merge!(document_overrides(doc)).compact
         end
       end
 
